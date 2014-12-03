@@ -1,0 +1,22 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "centos-65-x64-virtualbox-puppet"
+  config.vm.box_url = "http://puppet-vagrant-boxes.puppetlabs.com/centos-65-x64-virtualbox-puppet.box"
+
+  config.vm.network "private_network", ip: "192.168.33.109"
+  config.vm.hostname = "example9.local"
+
+  # Manage host
+  if Vagrant.has_plugin?('vagrant-hostmanager')
+    config.hostmanager.enabled = true
+    config.hostmanager.manage_host = true
+  else
+    puts '[WARNING] Host manager plugin is not installed! Please run `vagrant plugin install vagrant-hostmanager`'
+  end
+ 
+  config.vm.provision "puppet" do |puppet|
+    puppet.manifests_path = "manifests"
+    puppet.manifest_file  = "default.pp"
+  end
+
+  config.vm.post_up_message = "Machine ready, browse to http://example9.local:8080/sample/ in your browser to view Apache's sample war."
+end
